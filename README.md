@@ -1,3 +1,2 @@
 # Doodle-Jump
-Game made by sdl2
-You can play game here
+Doodle want to find his gf on the top of the mountain. Can you help him ?
