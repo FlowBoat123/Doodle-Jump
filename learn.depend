@@ -1,0 +1,83 @@
+# depslib dependency file v1.0
+1707915101 source:c:\users\admin\onedrive\desktop\learn\test.cpp
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<stdio.h>
+	<string>
+
+1708525386 source:c:\users\admin\onedrive\desktop\learn\game.cpp
+	"Game.hpp"
+	"doodle.hpp"
+	"real.hpp"
+	"Brickform.hpp"
+	"Monsterform.hpp"
+	"Score.hpp"
+	"Platform.hpp"
+
+1708506122 c:\users\admin\onedrive\desktop\learn\game.hpp
+	<iostream>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<SDL2/SDL_ttf.h>
+	<SDL2/SDL_mixer.h>
+
+1708486541 source:c:\users\admin\onedrive\desktop\learn\main.cpp
+	<iostream>
+	"Game.hpp"
+
+1707916650 source:c:\users\admin\onedrive\desktop\learn\nhap.cpp
+	"real.hpp"
+	"Game.hpp"
+
+1708075366 c:\users\admin\onedrive\desktop\learn\real.hpp
+	<iostream>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+
+1708506773 source:c:\users\admin\onedrive\desktop\learn\real.cpp
+	"real.hpp"
+	"LoadFile.hpp"
+
+1708524957 source:c:\users\admin\onedrive\desktop\learn\brickform.cpp
+	"Brickform.hpp"
+
+1708504691 c:\users\admin\onedrive\desktop\learn\doodle.hpp
+	<iostream>
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+
+1708524899 c:\users\admin\onedrive\desktop\learn\brickform.hpp
+	"Game.hpp"
+
+1708489027 source:c:\users\admin\onedrive\desktop\learn\doodle.cpp
+	"doodle.hpp"
+
+1707965939 source:c:\users\admin\onedrive\desktop\learn\gametitles.cpp
+
+1708071774 c:\users\admin\onedrive\desktop\learn\gametitles.hpp
+	"Game.hpp"
+
+1708075303 source:c:\users\admin\onedrive\desktop\learn\loadfile.cpp
+	"LoadFile.hpp"
+
+1708075296 c:\users\admin\onedrive\desktop\learn\loadfile.hpp
+	"Game.hpp"
+
+1708072441 source:c:\users\admin\onedrive\desktop\learn\monsterform.cpp
+
+1708443925 c:\users\admin\onedrive\desktop\learn\monsterform.hpp
+
+1708505660 c:\users\admin\onedrive\desktop\learn\score.hpp
+	"Game.hpp"
+
+1708505666 source:c:\users\admin\onedrive\desktop\learn\score.cpp
+	"Score.hpp"
+
+1708444698 source:c:\users\admin\onedrive\desktop\learn\platform.cpp
+	"Platform.hpp"
+
+1708525202 c:\users\admin\onedrive\desktop\learn\platform.hpp
+	"Game.hpp"
+	"Brickform.hpp"
+	<vector>
+
