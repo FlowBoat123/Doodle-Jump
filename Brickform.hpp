@@ -12,11 +12,12 @@ public:
     bool update(int vY = 0);
     void auto_update();
     void setPosition(int x,int y,int whichtype = 0);
+    void collidedAnimation();
+    void preCollidedAnimation(){touched = 0,tempY = posY,LastTouched = SDL_GetTicks();}
 
     SDL_Rect* getSprite(int x){ return &gSpriteBricks[x];}
 
-    int getwidth(){return mwidth;}
-    int getheight(){return mheight;}
+    bool isTouched(){return touched;}
     int getX(){return posX;}
     int getY(){return posY;}
     int getType(){return type;}
@@ -24,9 +25,11 @@ private:
     SDL_Texture *mTexture;
     SDL_Rect gSpriteBricks[8];
     int mwidth,mheight;
-    int posX,posY;
+    int posX,posY,tempY;
     int velX = 2;
     int type;
+    bool touched = 0;
+    Uint32 LastTouched;
 };
 
 

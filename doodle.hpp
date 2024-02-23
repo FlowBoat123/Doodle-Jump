@@ -31,14 +31,15 @@ public:
     int vY(){return velY;}
 
     void scroll(int newHeight){posY = newHeight;}
-    bool getDirection(){return direction;}
+    int getDoodleSprite();
 private:
     SDL_Texture *mTexture;
-    SDL_Rect gSpriteClips[3];
+    SDL_Rect gSpriteClips[4];
     int mwidth,mheight;
     double posX,posY;
     double velX,velY;
-    bool direction = 0;
+
+    bool direction = 0;Uint32 lastCollided; //set doodle sprite
 };
 
 #endif // real_hpp

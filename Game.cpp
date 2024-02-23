@@ -43,10 +43,9 @@ bool Game::init(const char *title, int xpos,int ypos,int width, int height, bool
         for(int i = 0;i < 12;i++){
             br = new Brick();        br->LoadImage(renderer,"brick.png");
             br->setPosition(rand() % (width - 70),rand() % (height - 100));
+//            br->setPosition(200,400);
             Plat->add(br);
         }
-//        std::cout << Plat->getSize() << '\n';
-//        Plat->draw(renderer);
         isRunning = true;
     }else{
         isRunning = false;
@@ -77,10 +76,11 @@ void Game::update()
         score->PassBorder();
         Plat->update(mc->vY(),renderer);
         if(mc->vY() < 0){
-            score->Plus(abs(mc->vY()));
+            score->Plus(abs(mc->vY())); // update score
         }
-        mc->scroll(border);
+        mc->scroll(border); // update pos doodle
     }
+    else Plat->animation();
     Plat->auto_update();
 
     if(!score->isPassed() && mc->vY()<0){//change and update score
@@ -89,7 +89,7 @@ void Game::update()
     score->changeScore(score->getPoint());
     score->LoadText(renderer,score->getString(),{0,0,0});
 
-    if(Plat->CheckCollided(mc->getX(),mc->getY(),mc->getDirection()) && mc->vY() > 0)collided = 1;
+    if(Plat->CheckCollided( mc->getX() , mc->getY() , mc->getDoodleSprite() , mc->vY() ))collided = 1; // update platform and collided
     mc->update(collided);
 }
 
@@ -104,7 +104,7 @@ void Game::render()
     bg->render(renderer,0,0);
     Plat->draw(renderer);
 
-    mc->render(renderer,mc->getX(),mc->getY(),mc->getSprite(mc->getDirection()));
+    mc->render(renderer,mc->getX(),mc->getY(),mc->getSprite(mc->getDoodleSprite()));
     score->renderBar(renderer,0,0);
     score->renderPoint(renderer,4,0);
 

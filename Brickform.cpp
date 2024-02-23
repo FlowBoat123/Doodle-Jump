@@ -16,18 +16,28 @@ void Brick::setPosition(int x,int y,int whichType)
 {
     posX = x;
     posY = y;
-//    std::cout << posX << ' ' << posY << '\n';
     type = whichType;
 }
 
 bool Brick::update(int vY)
 {
-    posY = posY - vY;
+    posY -= vY;
+    tempY -= vY;
     if(posY  > 600){
         free();
         return 1;
     }
     return 0;
+}
+
+void Brick::collidedAnimation()
+{
+
+    Uint32 current = SDL_GetTicks();
+    float animation = current - LastTouched;
+    if(animation < 100.4)posY = tempY + 4;
+    else posY = tempY;
+//    std::cout << posY << ' ' << tempY << '\n';
 }
 
 void Brick::auto_update()
