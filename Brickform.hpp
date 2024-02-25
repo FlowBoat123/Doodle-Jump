@@ -13,23 +13,29 @@ public:
     void auto_update();
     void setPosition(int x,int y,int whichtype = 0);
     void collidedAnimation();
-    void preCollidedAnimation(){touched = 0,tempY = posY,LastTouched = SDL_GetTicks();}
+    void preCollidedAnimation(){tempY = posY,LastTouched = SDL_GetTicks();}
+    void breakAnimation();
 
-    SDL_Rect* getSprite(int x){ return &gSpriteBricks[x];}
+    SDL_Rect* getSprite(int x){ return &gSpriteBricks[lastFrame];}
+    SDL_Rect* getFrame(){return &gSpriteBricks[lastFrame];}
 
     bool isTouched(){return touched;}
     int getX(){return posX;}
     int getY(){return posY;}
+    int getW(){return width;}
+    int getH(){return height;}
     int getType(){return type;}
 private:
     SDL_Texture *mTexture;
     SDL_Rect gSpriteBricks[8];
-    int mwidth,mheight;
+    int width,height;
     int posX,posY,tempY;
     int velX = 2;
     int type;
+    int lastFrame = 4;
+
     bool touched = 0;
-    Uint32 LastTouched;
+    Uint32 LastTouched,LastUpdate;
 };
 
 

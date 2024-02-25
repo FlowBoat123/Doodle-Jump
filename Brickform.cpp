@@ -1,15 +1,16 @@
 #include "Brickform.hpp"
+#include <cmath>
 
 Brick::Brick()
 {
-    gSpriteBricks[0] = {0,50*0,170,50};
-    gSpriteBricks[1] = {0,50*1,170,50};
-    gSpriteBricks[2] = {0,50*2,170,50};
-    gSpriteBricks[3] = {0,50*3,170,50};
-    gSpriteBricks[4] = {0,50*4,170,50};
-    gSpriteBricks[5] = {0,50*5,170,50};
-    gSpriteBricks[6] = {0,50*6,170,50};
-    gSpriteBricks[7] = {0,50*7,170,50};
+    gSpriteBricks[0] = {0,0,75,20};
+    gSpriteBricks[1] = {0,20,75,20};
+    gSpriteBricks[2] = {0,20*2,75,20};
+    gSpriteBricks[3] = {0,20*3,75,20};
+    gSpriteBricks[4] = {0,20*4,75,20};
+    gSpriteBricks[5] = {0,20*5,75,22};
+    gSpriteBricks[6] = {0,20*5+22,75,35};
+    gSpriteBricks[7] = {0,20*5+22+35,75,45};
 }
 
 void Brick::setPosition(int x,int y,int whichType)
@@ -17,6 +18,8 @@ void Brick::setPosition(int x,int y,int whichType)
     posX = x;
     posY = y;
     type = whichType;
+    width = getSprite(type)->w;
+    height = getSprite(type)->h;
 }
 
 bool Brick::update(int vY)
@@ -32,12 +35,22 @@ bool Brick::update(int vY)
 
 void Brick::collidedAnimation()
 {
-
     Uint32 current = SDL_GetTicks();
-    float animation = current - LastTouched;
-    if(animation < 100.4)posY = tempY + 4;
+    float time_diff = current - LastTouched;
+    if(time_diff < 100.4)posY = tempY + 4;
     else posY = tempY;
-//    std::cout << posY << ' ' << tempY << '\n';
+}
+
+void Brick::breakAnimation()
+{
+    Uint32 current = SDL_GetTicks();
+    float time_diff = current - LastUpdate;
+    if(lastFrame == 7)free();
+    if(time_diff > 50.4 && lastFrame != 7){
+        lastFrame += 1;
+//        std::cout << lastFrame << '\n';
+        LastUpdate = current;
+    }
 }
 
 void Brick::auto_update()
@@ -49,26 +62,13 @@ void Brick::auto_update()
 
 bool Brick::LoadImage(SDL_Renderer *renderer,std::string path)
 {
-    SDL_Texture *newTexture = NULL;
-    SDL_Surface *loadedSurface = IMG_Load( path.c_str() );
-    SDL_SetColorKey( loadedSurface,SDL_TRUE,SDL_MapRGB(loadedSurface->format,0,0xFF,0xFF) );
-    newTexture = SDL_CreateTextureFromSurface( renderer,loadedSurface );
-    mwidth = loadedSurface->w;
-    mheight = loadedSurface->h;
-    SDL_FreeSurface( loadedSurface );
-    mTexture = newTexture;
+    mTexture = IMG_LoadTexture(renderer,path.c_str());
     return mTexture != NULL;
 }
 
 void Brick::render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip, double angel,SDL_Point* center, SDL_RendererFlip flip )
 {
-    SDL_Rect renderQuad = {x,y,mwidth,mheight};
-
-    if(clip != NULL)
-    {
-        renderQuad.w = 70;
-        renderQuad.h = 20;
-    }
+    SDL_Rect renderQuad = {x,y,clip->w,clip->h};
     SDL_RenderCopyEx( renderer,mTexture,clip,&renderQuad,angel,center,flip );
 }
 
@@ -76,9 +76,9 @@ void Brick::free()
 {
     if( mTexture != NULL )
 	{
-		SDL_DestroyTexture( mTexture );
+	    SDL_DestroyTexture(mTexture);
 		mTexture = NULL;
-		mwidth = 0;
-		mheight = 0;
+		width = 0;
+		height = 0;
 	}
 }
