@@ -29,10 +29,6 @@ public:
             for(int i = monsters_size-1;i >= 0;i--){
                 if(MonsterSprites[i]->update(vY)){
                     remove_(i);
-//                    new_br = new Brick();
-//                    new_br->LoadImage(renderer,"brick.png");
-//                    new_br->setPosition(rand() % 330,0);
-//                    add(new_br);
                 }
             }
         }
@@ -46,14 +42,19 @@ public:
         }
     }
 
-    bool CheckCollided(int x,int y,int vY){
+    int CheckCollided(int x,int y,int vY){
         collided = 0;
         for(int i = 0;i < monsters_size;i++){
             if( (x + 50 > MonsterSprites[i]->getX()) && // <--
-                (x + 20 < MonsterSprites[i]->getX() + MonsterSprites[i]->getW()) &&
-                (y + 70 >MonsterSprites[i]->getY())       &&
+                (x + 10 < MonsterSprites[i]->getX() + MonsterSprites[i]->getW()) &&
+                (y + 70 >MonsterSprites[i]->getY())  &&
                 (y + 70 < MonsterSprites[i]->getY() + MonsterSprites[i]->getH()) &&
                 (vY > 0))collided = 1;
+            if( (x + 50 > MonsterSprites[i]->getX()) && // monster kill doodle
+                (x + 10 < MonsterSprites[i]->getX() + MonsterSprites[i]->getW()) &&
+                (y  < MonsterSprites[i]->getY() + MonsterSprites[i]->getH()) &&
+                (y  > MonsterSprites[i]->getY())
+                )collided = 2;
         }
         return collided;
     }
@@ -67,7 +68,7 @@ public:
     void draw(SDL_Renderer* renderer){
         if(!MonsterSprites.empty()){
             for(int i = 0;i < monsters_size;i++){
-                MonsterSprites[i]->render(renderer,MonsterSprites[i]->getX(),MonsterSprites[i]->getY(),MonsterSprites[i]->getSprite(0));
+                MonsterSprites[i]->render(renderer,MonsterSprites[i]->getX(),MonsterSprites[i]->getY(),MonsterSprites[i]->getFrame());
             }
         }
     }
@@ -79,7 +80,7 @@ public:
     int getSize(){return monsters_size;}
 private:
     std::vector<Monster*> MonsterSprites;
-    bool collided;
+    int collided;
     int monsters_size;
 };
 
