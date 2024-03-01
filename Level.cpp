@@ -93,21 +93,38 @@ void Level::updateLevel(SDL_Renderer *renderer)
         once = 0;
     }
     if(!once){
-        current_LV.push_back({get_maxH() - 600,Objects[rand() % 2 + 1]});
-        last_lv = (int)current_LV.size();
-        auto lv = current_LV[last_lv-1];
+        if(cur_lv == "Level1.txt"){
+            current_LV.push_back({get_maxH() - 600,Objects[rand() % 2 + 1]});
+            last_lv = (int)current_LV.size();
+            auto lv = current_LV[last_lv-1];
 
-        int lv_height = lv.first;
-        auto lv_object = lv.second;
-        for(auto obj : lv_object){
-            br = new Brick();
-            br->LoadImage(renderer);
-            br->setPosition(obj.x,obj.y + lv_height);
-            Plat->add(br);
+            int lv_height = lv.first;
+            auto lv_object = lv.second;
+            break_br = rand() % 3;
+            moving_br = rand() % 3;
+
+            for(auto obj : lv_object){
+                br = new Brick();
+                br->LoadImage(renderer);
+                obj.x = obj.x % 320;
+                if(rand()%3 == 1 && moving_br > 0)
+                    br->setPosition(obj.x ,obj.y + lv_height,1),moving_br--;
+                else if(rand()%3 == 2 && break_br > 0)
+                    br->setPosition(obj.x,obj.y + lv_height,4),break_br--;
+                else br->setPosition(obj.x,obj.y + lv_height,0);
+                Plat->add(br);
+            }
+            once = 1;
         }
-        once = 1;
+
     }
 
+}
+
+void Level::fix()
+{
+    if(mc->getX() == INT_MIN)mc->reset();
+    if(score->getPoint() == INT_MIN)score->reset();
 }
 
 void Level::HandleEvent(SDL_Event event)
@@ -119,8 +136,9 @@ void Level::Update(SDL_Renderer *renderer)
 {
 //    std::cout << mc->getX() << ' ' << mc->getY() << '\n';  //bug doodle
 //    std::cout << score->getPoint() << '\n';                //bug score
-    if(score->getPoint() / 10 > 500){
-        cur_lv = "";
+    fix();
+    if(score->getPoint() / 10 > 750){
+        cur_lv = "Level2";
     }
     if(get_minH() > 100)updateLevel(renderer);
     collided = 0; //reset collided check

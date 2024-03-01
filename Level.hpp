@@ -13,18 +13,24 @@
 
 class Level{
 private:
-    struct object{
+    struct object{//posNtype
         int x,y;
         std::string type = "";
     };
+    struct objectGroup{
+        int height;
+        object obj;
+        int break_br = 0,moving_br = 0;
+    };
     std::vector< std::vector<object> >Objects;
     std::vector< std::string> vari;
-    std::vector< std::pair< int, std::vector<object>> > current_LV;
+    std::vector< std::pair< int, std::vector<object> > > current_LV;
     int last_lv;
     bool once = 0;
     int collided;
+    int break_br = 0,moving_br = 0;
     int border = 200;
-    std::string cur_lv = "";
+    std::string cur_lv = "Level1.txt";
     Doodle *mc = nullptr;
     Brick *br = nullptr;
     Score_bar *score = nullptr;
@@ -47,6 +53,7 @@ public:
     void HandleEvent(SDL_Event event);
     void Update(SDL_Renderer *renderer);
     void Render(SDL_Renderer *renderer);
+    void fix();
     void free();
 };
 

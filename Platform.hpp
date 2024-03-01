@@ -28,10 +28,6 @@ public:
             for(int i = Plat_size-1;i >= 0;i--){
                 if(Plat[i]->update(vY)){
                     remove_(i);
-                    new_br = new Brick();
-                    new_br->LoadImage(renderer,"brick.png");
-                    new_br->setPosition(rand() % 330,0);
-                    add(new_br);
                 }
             }
         }
@@ -41,8 +37,11 @@ public:
         if(!Plat.empty()){
             for(int i = Plat_size-1;i >= 0;i--){
                 if(Plat[i] == brick_collided && !Plat[i]->isTouched()){
-                    Plat[i]->collidedAnimation();
-                    Plat[i]->breakAnimation();
+                    if(Plat[i]->getType() == 4){
+                        Plat[i]->breakAnimation();
+                    }
+                    else
+                        Plat[i]->collidedAnimation();
                 }
             }
         }
@@ -62,7 +61,13 @@ public:
                                                             (y + 70 < Plat[i]->getY() + Plat[i]->getH()) &&
                                                             (vY > 0))collided = 1, brick_collided = Plat[i];
         }
-        if(collided)brick_collided ->preCollidedAnimation();
+        if(collided){
+//            std::cout << brick_collided->getType() << '\n';
+            brick_collided -> preCollidedAnimation();
+            if(brick_collided->getType() == 4)collided = 0;
+        }
+
+//        if(brick_collided->getType() == 4)collided = 0;
         return collided;
     }
 

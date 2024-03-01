@@ -6,7 +6,7 @@
 class Brick{
 public:
     Brick();
-    bool LoadImage(SDL_Renderer *renderer,std::string path);
+    bool LoadImage(SDL_Renderer *renderer,std::string path = "brick.png");
     void render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip = NULL, double angel = 0.0,SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );
     void free();
     bool update(int vY = 0);
@@ -16,8 +16,13 @@ public:
     void preCollidedAnimation(){tempY = posY,LastTouched = SDL_GetTicks();}
     void breakAnimation();
 
-    SDL_Rect* getSprite(int x){ return &gSpriteBricks[lastFrame];}
-    SDL_Rect* getFrame(){return &gSpriteBricks[lastFrame];}
+    SDL_Rect* getSprite(int x){
+        if(type == 4)
+            return &gSpriteBricks[lastFrame];
+        else
+            return &gSpriteBricks[x];
+    }
+//    SDL_Rect* getFrame(){return &gSpriteBricks[lastFrame];}
 
     bool isTouched(){return touched;}
     int getX(){return posX;}
