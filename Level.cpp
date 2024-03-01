@@ -16,6 +16,7 @@ Level::~Level()
 
 void Level::init(SDL_Renderer *renderer)
 {
+    bg = new background();               bg->LoadImage(renderer,"background.png");      //backgroup
     score = new Score_bar();             score->LoadImage(renderer,"top-score.png");
                                          score->LoadText(renderer,"Score : 0",{0,0,0}); // Score board and text
     background* bg = new background();   bg->LoadImage(renderer,"background.png");      // background
@@ -25,7 +26,6 @@ void Level::init(SDL_Renderer *renderer)
     monsters = new MonsterGroup();                                                      // monster
     monster = new Monster();             monster->LoadImage(renderer,"FlyMonster.png"); //monster group
 
-    mc->Set(150,400);
 }
 
 void Level::LevelFromFile(std::string lv_str)
@@ -72,12 +72,42 @@ void Level::LevelFromFile(std::string lv_str)
 
 void Level::LoadLevel(SDL_Renderer* renderer)
 {
-    for(auto pos : Objects[0]){
+    current_LV.push_back({0,Objects[0]});
+    last_lv = (int)current_LV.size();
+    auto lv = current_LV[last_lv-1];
+
+    int lv_height = lv.first;
+    auto lv_object = lv.second;
+    for(auto obj : lv_object){
         br = new Brick();
         br->LoadImage(renderer);
-        br->setPosition(pos.x,pos.y);
+        br->setPosition(obj.x,obj.y + lv_height,0);
         Plat->add(br);
     }
+}
+
+void Level::updateLevel(SDL_Renderer *renderer)
+{
+    if(get_minH() > 300){
+        current_LV.erase(current_LV.begin());
+        once = 0;
+    }
+    if(!once){
+        current_LV.push_back({get_maxH() - 600,Objects[rand() % 2 + 1]});
+        last_lv = (int)current_LV.size();
+        auto lv = current_LV[last_lv-1];
+
+        int lv_height = lv.first;
+        auto lv_object = lv.second;
+        for(auto obj : lv_object){
+            br = new Brick();
+            br->LoadImage(renderer);
+            br->setPosition(obj.x,obj.y + lv_height);
+            Plat->add(br);
+        }
+        once = 1;
+    }
+
 }
 
 void Level::HandleEvent(SDL_Event event)
@@ -87,11 +117,19 @@ void Level::HandleEvent(SDL_Event event)
 
 void Level::Update(SDL_Renderer *renderer)
 {
-//    Doodle_Width = 58,Height = 57 | Doodle and brick inform | Brick_width = 70,height = 20;
-    collided = 0;
+//    std::cout << mc->getX() << ' ' << mc->getY() << '\n';  //bug doodle
+//    std::cout << score->getPoint() << '\n';                //bug score
+    if(score->getPoint() / 10 > 500){
+        cur_lv = "";
+    }
+    if(get_minH() > 100)updateLevel(renderer);
+    collided = 0; //reset collided check
     if(mc->getY() < border){//check if doodle cross the border
         score->PassBorder();
         Plat->update(mc->vY(),renderer);
+        for(auto &lv : current_LV){
+            lv.first -= (mc->vY());
+        }
         if(mc->vY() < 0){
             score->Plus(abs(mc->vY())); // update score
         }
@@ -106,7 +144,7 @@ void Level::Update(SDL_Renderer *renderer)
     if(!score->isPassed() && mc->vY()<0){//change and update score
         score->Plus(abs(mc->vY()));
     }
-    score->changeScore(score->getPoint());
+    score->changeScore();
     score->LoadText(renderer,score->getString(),{0,0,0});
 
     if(Plat->CheckCollided( mc->getX() , mc->getY() , mc->getDoodleSprite() , mc->vY() ))collided = 1; // check doodle and plat collided
@@ -116,10 +154,15 @@ void Level::Update(SDL_Renderer *renderer)
 
 void Level::Render(SDL_Renderer *renderer)
 {
-//    bg->render(renderer,0,0);
+    bg->render(renderer,0,0);
     Plat->draw(renderer);
-//    monsters->draw(renderer); // test monster
+    monsters->draw(renderer); // test monster
     mc->render(renderer,mc->getX(),mc->getY(),mc->getSprite(mc->getDoodleSprite()));
-//    score->renderBar(renderer,0,0);
-//    score->renderPoint(renderer,4,0);
+    score->renderBar(renderer,0,0);
+    score->renderPoint(renderer,4,0);
+}
+
+void Level::free()
+{
+
 }
