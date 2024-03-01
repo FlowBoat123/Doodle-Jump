@@ -17,8 +17,8 @@ public:
 
     bool LoadImage(SDL_Renderer *renderer,std::string path);
     void render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip = NULL, double angel = 0.0,SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );
-
     void update(bool collided = 0);
+    void reset(){posX = 150,posY = 450;}
     void free();
     SDL_Rect* getSprite(int x){ return &gSpriteClips[x];}
 

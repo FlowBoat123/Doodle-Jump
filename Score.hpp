@@ -13,6 +13,7 @@ class Score_bar{
         void renderBar(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip = NULL);
         void renderPoint(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip = NULL);
         void Plus(int x = 0);
+        void reset(){Point = 0;}
 
         void PassBorder(){under_h = 1;}
         bool isPassed(){return under_h;}
@@ -20,9 +21,8 @@ class Score_bar{
         int getwidth(){return mwidth;}
         int getheight(){return mheight;}
         std::string getString(){return Score_text;}
-        void changeScore(int x){
-            x/=10;
-            Score_text = "Score : " + std::to_string(x);
+        void changeScore(){
+            Score_text = "Score : " + std::to_string(Point/10);
         }
 
     private:

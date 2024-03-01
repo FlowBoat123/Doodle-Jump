@@ -3,8 +3,8 @@
 Doodle::Doodle()
 {
     mTexture = NULL;
-    mwidth = 0;posX = 100;
-    mheight = 0;posY = 300;
+    mwidth = 0; posX = 150;
+    mheight = 0; posY = 400;
     gSpriteClips[0] = {0,0,58,57};      // <--
     gSpriteClips[1] = {58,0,58,57};     // -->
     gSpriteClips[2] = {58*2,0,58,57};   //jump animation <--
@@ -29,14 +29,12 @@ bool Doodle::LoadImage(SDL_Renderer *renderer,std::string path)
 
 void Doodle::update(bool collided)
 {
-//    std::cout << posX << ' ' << posY << '\n';
-//    if(collided)std::cout << "collied\n";
     if(collided)lastCollided = SDL_GetTicks();//animation for doodle
     velY += 0.5;
     if(velY > 8){
         velY = 8;
     }
-    if(posY >= 500 || collided){
+    if(posY >= 600 || collided){
         velY = -15;
     }
     //update position
@@ -51,8 +49,6 @@ void Doodle::update(bool collided)
     if(posX + 30 < 0){
         posX = 400 - abs(posX);
     }
-
-//    std::cout << posY << ' ' << velY << '\n';
 }
 
 int Doodle::getDoodleSprite()
