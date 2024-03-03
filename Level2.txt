@@ -1,1 +1,46 @@
-2.0:
+45 460 nPlat
+240 530 nPlat
+20 280 movingPlat
+155 160 nPlat
+155 160 nMonster
+20 60 nPlat
+*0
+--
+275 25 breakPlat
+35 60 fMonster
+140 160 movingPlat
+30 430 nPlat
+30 430 nMonster
+270 350 nPlat
+270 350 nMonster
+230 530 nPlat
+*1
+--
+220 30 breakPlat
+100 90 nPlat
+40 190 breakPlat
+270 245 nPlat
+35 350 breakPlat
+215 370 breakPlat
+235 450 breakPlat
+40 500 nPlat
+230 540 breakPlat
+*2
+--
+50 85 movingPlat
+25 200 breakPlat
+240 260 movingPlat
+30 330 fmonster
+70 465 moving Plat
+250 540 nPlat
+250 540 nMonster
+--
+30 70 movingPlat
+200 210 nPlat
+200 210 nMonster
+60 444 nPlat
+60 444 nMonster
+270 535 nPlat
+270 535 nMonster
+
+

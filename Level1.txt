@@ -1,4 +1,3 @@
-1.0:
 10 550
 85 530
 160 550
@@ -9,26 +8,26 @@
 200 320
 70 260 
 150 200
+300 200
+30 140
 220 140
 240 80
-Monster random in any brick(all normal bricks)
-
-1.1:
+*0
+--
 150 530
 200 510
-270 480
+40 480
 270 420
 240 350
 300 280
 190 240
-190 225
+60 225
 250 180
 40 150
 90 120
 230 70
-2 Monsters random in any brick(2 break-brick,1 moving brick)
-
-1.2:
+*1
+--
 120 550
 230 530
 240 470
@@ -40,7 +39,8 @@ Monster random in any brick(all normal bricks)
 220 110
 180 40
 260 20
-1 Monster random,3 break-brick,2 moving brick
+*2
+
 
 
 
