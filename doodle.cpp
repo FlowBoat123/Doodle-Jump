@@ -3,7 +3,7 @@
 Doodle::Doodle()
 {
     mTexture = NULL;
-    mwidth = 0; posX = 150;
+    mwidth = 0; posX = 100;
     mheight = 0; posY = 400;
     gSpriteClips[0] = {0,0,58,57};      // <--
     gSpriteClips[1] = {58,0,58,57};     // -->
@@ -27,16 +27,17 @@ bool Doodle::LoadImage(SDL_Renderer *renderer,std::string path)
     return mTexture != NULL;
 }
 
-void Doodle::update(bool collided)
+void Doodle::update(int &collided,bool died)
 {
-    if(collided)lastCollided = SDL_GetTicks();//animation for doodle
+    if(collided == 1)lastCollided = SDL_GetTicks();//animation for doodle
     velY += 0.5;
     if(velY > 8){
         velY = 8;
     }
-    if(posY >= 600 || collided){
+    if(posY >= 600 || (collided == 1 && !died)){
         velY = -15;
     }
+    if(collided == 2)velY = 8;
     //update position
     posY += velY;
     posX += velX;

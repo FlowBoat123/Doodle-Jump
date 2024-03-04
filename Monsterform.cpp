@@ -15,8 +15,8 @@ void Monster::Set(int x,int y,int t)
     posX = x;const_X = x;
     posY = y;const_Y = y;
     type = t;
-    width = getFrame()->w - 10;
-    height = getFrame()->h - 10;
+    width = getSprite(t)->w - 10;
+    height = getSprite(t)->h - 10;
 }
 
 void Monster::LoadImage(SDL_Renderer *renderer,std::string path)

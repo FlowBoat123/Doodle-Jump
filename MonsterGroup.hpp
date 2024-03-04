@@ -50,10 +50,12 @@ public:
                 (y + 70 >MonsterSprites[i]->getY())  &&
                 (y + 70 < MonsterSprites[i]->getY() + MonsterSprites[i]->getH()) &&
                 (vY > 0))collided = 1;
-            if( (x + 50 > MonsterSprites[i]->getX()) && // monster kill doodle
+            else if( (x + 50 > MonsterSprites[i]->getX()) && // monster kill doodle
                 (x + 10 < MonsterSprites[i]->getX() + MonsterSprites[i]->getW()) &&
-                (y  < MonsterSprites[i]->getY() + MonsterSprites[i]->getH()) &&
-                (y  > MonsterSprites[i]->getY())
+                (((y + 57 > MonsterSprites[i]->getY()) &&
+                (y  < MonsterSprites[i]->getY())) ||
+                ((y < MonsterSprites[i]->getY() + MonsterSprites[i]->getH()) &&
+                (y + 57 > MonsterSprites[i]->getY() + MonsterSprites[i]->getH())))
                 )collided = 2;
         }
         return collided;
@@ -68,7 +70,8 @@ public:
     void draw(SDL_Renderer* renderer){
         if(!MonsterSprites.empty()){
             for(int i = 0;i < monsters_size;i++){
-                MonsterSprites[i]->render(renderer,MonsterSprites[i]->getX(),MonsterSprites[i]->getY(),MonsterSprites[i]->getFrame());
+//                std::cout << MonsterSprites[i]->getSprite(0) << '\n';
+                MonsterSprites[i]->render(renderer,MonsterSprites[i]->getX(),MonsterSprites[i]->getY(),MonsterSprites[i]->getSprite(MonsterSprites[i]->getType()));
             }
         }
     }

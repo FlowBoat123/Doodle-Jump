@@ -29,7 +29,7 @@ class Score_bar{
         SDL_Texture *mTexture,*gTexture;
         TTF_Font *gFont;
         int mwidth,mheight,gwidth,gheight;
-        int Point;
+        int Point = 0;
         bool under_h;
         std::string Score_text;
         SDL_Color textCO = {0,0,0};
