@@ -34,6 +34,7 @@
 70 465 moving Plat
 250 540 nPlat
 250 540 nMonster
+*3
 --
 30 70 movingPlat
 200 210 nPlat
@@ -42,5 +43,14 @@
 60 444 nMonster
 270 535 nPlat
 270 535 nMonster
+*4
+--
+230 460 nPlat
+230 460 nMonster
+200 125 nPlat
+200 125 nMonster
+30 300 nPlat
+30 300 nMonster
+30 520 fMonster
 
 
