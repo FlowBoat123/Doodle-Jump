@@ -10,13 +10,19 @@ Monster::Monster()
     FlySprite[2] = {79*2,0,77,55}; // 3
 }
 
-void Monster::Set(int x,int y,int t)
+void Monster::SetType(int t,SDL_Renderer *renderer)
 {
-    posX = x;const_X = x;
-    posY = y;const_Y = y;
     type = t;
     width = getSprite(t)->w - 10;
     height = getSprite(t)->h - 10;
+    if(t <= 1)LoadImage(renderer,"monsterTemplate.png");
+    else LoadImage(renderer,"FlyMonster.png");
+}
+
+void Monster::SetPosition(int x,int y)
+{
+    posX = x;const_X = x;
+    posY = y;const_Y = y;
 }
 
 void Monster::LoadImage(SDL_Renderer *renderer,std::string path)
@@ -27,7 +33,7 @@ void Monster::LoadImage(SDL_Renderer *renderer,std::string path)
 void Monster::render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip)
 {
     SDL_Rect renderQuad;
-    renderQuad = {x,y,clip->w-10,clip->h-10};
+    renderQuad = {x,y,width,height};
     SDL_RenderCopy( renderer,mTexture,clip,&renderQuad );
 }
 
@@ -42,6 +48,10 @@ void Monster::free()
 
 void Monster::animation()
 {
+    if(killed){
+        posY += 8;
+        return;
+    }
     current = SDL_GetTicks();
     float dT = (current - LastUpdate) / 1000.0f;
     int frametoUpdate = floor(dT / (1.0f / animatedFPS));

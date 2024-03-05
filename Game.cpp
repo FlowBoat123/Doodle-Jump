@@ -1,7 +1,5 @@
 #include "Game.hpp"
-#include "real.hpp"
 #include "Level.hpp"
-background *bg = nullptr;
 Level *level = nullptr;
 int border = 200;
 
@@ -23,13 +21,14 @@ bool Game::init(const char *title, int xpos,int ypos,int width, int height, bool
         renderer = SDL_CreateRenderer(window,-1,0);                         // create renderer
 
         int imgFlags = IMG_INIT_JPG;
-        if(!imgFlags){std::cout << "cant load images\n";} // Load image
-        if( TTF_Init() == -1 ){ std::cout << "cant load ttf!\n"; }//Load ttf
+        if(!imgFlags){std::cout << "cant load images\n";}                   //Load image
+        if( TTF_Init() == -1 ){ std::cout << "cant load ttf!\n"; }          //Load ttf
 
         level = new Level();
         level->init(renderer);
-        level->LevelFromFile("Level1.txt");
+        level->LevelFromFile(level->getCurrentLV());
         level->LoadLevel(renderer);
+//        level->test(renderer);
 
         isRunning = true;
     }else{
@@ -51,7 +50,6 @@ void Game::handleEvents()
     }
     level->HandleEvent(event);
 }
-bool collided;
 void Game::update()
 {
     level->Update(renderer);

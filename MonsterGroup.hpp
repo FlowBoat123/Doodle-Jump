@@ -37,6 +37,9 @@ public:
     void animation(){
         if(!MonsterSprites.empty()){
             for(int i = monsters_size-1;i >= 0;i--){
+                if(MonsterSprites[i] == collided_monster){
+                    MonsterSprites[i]->SetKilled();
+                }
                 MonsterSprites[i]->animation();
             }
         }
@@ -49,7 +52,7 @@ public:
                 (x + 10 < MonsterSprites[i]->getX() + MonsterSprites[i]->getW()) &&
                 (y + 70 >MonsterSprites[i]->getY())  &&
                 (y + 70 < MonsterSprites[i]->getY() + MonsterSprites[i]->getH()) &&
-                (vY > 0))collided = 1;
+                (vY > 0))collided = 1,collided_monster = MonsterSprites[i];
             else if( (x + 50 > MonsterSprites[i]->getX()) && // monster kill doodle
                 (x + 10 < MonsterSprites[i]->getX() + MonsterSprites[i]->getW()) &&
                 (((y + 57 > MonsterSprites[i]->getY()) &&
@@ -83,6 +86,7 @@ public:
     int getSize(){return monsters_size;}
 private:
     std::vector<Monster*> MonsterSprites;
+    Monster *collided_monster = NULL;
     int collided;
     int monsters_size;
 };

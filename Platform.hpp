@@ -50,14 +50,14 @@ public:
     bool CheckCollided(int x,int y,int DoodleSprite,int vY){
         collided = 0;
         for(int i = 0;i < Plat_size;i++){
-            if(DoodleSprite == 0 || DoodleSprite == 2)if(   (x + 50 > Plat[i]->getX()) && // <--
+            if(DoodleSprite == 0 || DoodleSprite == 2)if(   (x + 50 > Plat[i]->getX())                   && // <--
                                                             (x + 20 < Plat[i]->getX() + Plat[i]->getW()) &&
-                                                            (y + 70 > Plat[i]->getY())       &&
+                                                            (y + 70 > Plat[i]->getY())                   &&
                                                             (y + 70 < Plat[i]->getY() + Plat[i]->getH()) &&
                                                             (vY > 0))collided = 1, brick_collided = Plat[i];
-            if(DoodleSprite == 1 || DoodleSprite == 3)if(   (x + 40 > Plat[i]->getX()) && // -->
+            if(DoodleSprite == 1 || DoodleSprite == 3)if(   (x + 40 > Plat[i]->getX())                   && // -->
                                                             (x + 10 < Plat[i]->getX() + Plat[i]->getW()) &&
-                                                            (y + 70 > Plat[i]->getY())      &&
+                                                            (y + 70 > Plat[i]->getY())                   &&
                                                             (y + 70 < Plat[i]->getY() + Plat[i]->getH()) &&
                                                             (vY > 0))collided = 1, brick_collided = Plat[i];
         }

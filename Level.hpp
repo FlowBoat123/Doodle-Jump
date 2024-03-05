@@ -17,17 +17,11 @@ private:
         int x,y;
         std::string type = "";
     };
-    struct objectGroup{
-        int height;
-        object obj;
-        int break_br = 0,moving_br = 0;
-    };
     std::vector< std::vector<object> >Objects;
-    std::vector< std::string> vari;
     std::vector< std::pair< int, std::vector<object> > > current_LV;
     int last_lv;
-    bool once = 0;
-    int collided;
+    bool once = 0,died = 0;
+    int collided_mon = 0,num = 0,collided_br = 0;
     int break_br = 0,moving_br = 0;
     int border = 200;
     std::string cur_lv = "Level1.txt";
@@ -53,8 +47,18 @@ public:
     void HandleEvent(SDL_Event event);
     void Update(SDL_Renderer *renderer);
     void Render(SDL_Renderer *renderer);
+    void test(SDL_Renderer *renderer);
     void fix();
     void free();
+
+    int to_int(std::string s){
+        num = 0;
+        for(int i = 0;i < (int)s.size();i++){
+            num = num * 10 + (s[i] - '0');
+        }
+        return num;
+    }
+    std::string getCurrentLV(){return cur_lv;}
 };
 
 #endif // Level_hpp

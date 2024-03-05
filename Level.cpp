@@ -26,6 +26,19 @@ void Level::init(SDL_Renderer *renderer)
     monsters = new MonsterGroup();                                                      // monster
     monster = new Monster();             monster->LoadImage(renderer,"FlyMonster.png"); //monster group
 
+//    mc->reset();
+}
+
+void Level::test(SDL_Renderer *renderer)
+{
+    monster = new Monster;
+    monster->SetType(1,renderer);
+    br = new Brick;
+    br->LoadImage(renderer);
+    br->setPosition(250,500,0);
+    monster->SetPosition(250,500-monster->getH()+7);
+    Plat->add(br);
+    monsters->add(monster);
 }
 
 void Level::LevelFromFile(std::string lv_str)
@@ -38,6 +51,8 @@ void Level::LevelFromFile(std::string lv_str)
 
     object temp;
     std::vector <object> lv;
+    std::string str;
+    int cnt = 0;
 
     while(getline(input_file,line)){
         if(line == "--")continue;
@@ -46,27 +61,26 @@ void Level::LevelFromFile(std::string lv_str)
             lv.clear();
             continue;
         }
-        int st = 0,num = 0;
-        if(line[0] == 't')st = 2;
-        for(int i = st;i < (int)line.size();i++){
+        str = "";cnt = 0; //reset
+        for(int i = 0;i < (int)line.size();i++){
             if(line[i] == ' '){
-                obj.first = num;
-                num = 0;
+                if(cnt == 0)obj.first = to_int(str),cnt++;
+                if(cnt == 1)obj.second = to_int(str);
+                str = "";
             }
             else{
-                num = num * 10 + (line[i] - '0');
+                str += line[i];
             }
         }
-        if(st != 2){
-            obj.second = num;
-            temp.x = obj.first;
-            temp.y = obj.second;
-            lv.push_back(temp);
-        }
-        else{
-            vari.push_back(std::to_string(num));
-        }
+        if(str[0] >= '0' && str[0] <= '9')obj.second = to_int(str);
+        temp.x = obj.first;
+        temp.y = obj.second;
+        temp.type = str;
+        lv.push_back(temp);
     }
+//    for(auto ob : Objects[0]){
+//        std::cout << ob.x << ' ' << ob.y << ' ' << ob.type << '\n';
+//    }
     input_file.close();
 }
 
@@ -88,7 +102,7 @@ void Level::LoadLevel(SDL_Renderer* renderer)
 
 void Level::updateLevel(SDL_Renderer *renderer)
 {
-    if(get_minH() > 300){
+    if(get_minH() > 600){
         current_LV.erase(current_LV.begin());
         once = 0;
     }
@@ -116,17 +130,44 @@ void Level::updateLevel(SDL_Renderer *renderer)
             }
             once = 1;
         }
+        if(cur_lv == "Level2.txt"){
+            current_LV.push_back({get_maxH() - 600,Objects[rand() % (int)Objects.size()]});
+            last_lv = (int)current_LV.size();
 
+            auto lv = current_LV[last_lv-1];
+            int lv_height = lv.first;
+            auto lv_object = lv.second;
+//            std::cout << ' ' << lv_height << '\n';
+            for(auto obj : lv_object){
+                br = new Brick();br->LoadImage(renderer);
+                monster = new Monster();
+                if(obj.type == "nPlat"){
+                    br->setPosition(obj.x,obj.y + lv_height,0);
+                    Plat->add(br);
+                }
+                if(obj.type == "movingPlat"){
+                    br->setPosition(obj.x,obj.y + lv_height,1);
+                    Plat->add(br);
+                }
+                if(obj.type == "breakPlat"){
+                    br->setPosition(obj.x,obj.y + lv_height,4);
+                    Plat->add(br);
+                }
+                if(obj.type == "nMonster"){
+                    monster->SetType(rand()%2,renderer);
+                    monster->SetPosition(obj.x,obj.y + lv_height - (monster->getH()));
+                    monsters->add(monster);
+                }
+                if(obj.type == "fMonster"){
+                    monster->SetType(2,renderer);
+                    monster->SetPosition(obj.x,obj.y + lv_height);
+                    monsters->add(monster);
+                }
+            }
+            once = 1;
+        }
     }
-
 }
-
-void Level::fix()
-{
-    if(mc->getX() == INT_MIN)mc->reset();
-    if(score->getPoint() == INT_MIN)score->reset();
-}
-
 void Level::HandleEvent(SDL_Event event)
 {
     mc->handleEvent(event);
@@ -134,17 +175,21 @@ void Level::HandleEvent(SDL_Event event)
 
 void Level::Update(SDL_Renderer *renderer)
 {
-//    std::cout << mc->getX() << ' ' << mc->getY() << '\n';  //bug doodle
-//    std::cout << score->getPoint() << '\n';                //bug score
-    fix();
-    if(score->getPoint() / 10 > 750){
-        cur_lv = "Level2";
+    // set level
+    if(score->getPoint() / 10 > 100){
+        if(cur_lv != "Level2.txt"){
+            cur_lv = "Level2.txt";
+            LevelFromFile(cur_lv);
+        }
     }
     if(get_minH() > 100)updateLevel(renderer);
-    collided = 0; //reset collided check
+    collided_br = 0; //reset collided with brick
+    collided_mon = 0; // reset collided with monster
+
     if(mc->getY() < border){//check if doodle cross the border
         score->PassBorder();
         Plat->update(mc->vY(),renderer);
+        monsters->update(mc->vY(),renderer);
         for(auto &lv : current_LV){
             lv.first -= (mc->vY());
         }
@@ -153,21 +198,25 @@ void Level::Update(SDL_Renderer *renderer)
         }
         mc->scroll(border); // update pos doodle
     }
-    else Plat->animation();
+//    else if(!died)Plat->animation();
     Plat->auto_update();
 
-    monsters->animation();
-
-
+    if(!died){ // set animation
+        monsters->animation();
+        Plat->animation();
+    }
     if(!score->isPassed() && mc->vY()<0){//change and update score
         score->Plus(abs(mc->vY()));
     }
-    score->changeScore();
+    score->changeScore();                               // change score
     score->LoadText(renderer,score->getString(),{0,0,0});
 
-    if(Plat->CheckCollided( mc->getX() , mc->getY() , mc->getDoodleSprite() , mc->vY() ))collided = 1; // check doodle and plat collided
-    if(monsters->CheckCollided( mc->getX() , mc->getY() , mc->vY() ))collided = 1; // check doodle and monster collided
-    mc->update(collided);
+    if(Plat->CheckCollided( mc->getX() , mc->getY() , mc->getDoodleSprite() , mc->vY() ))collided_br = 1;   // check doodle and plat collided
+    collided_mon = monsters->CheckCollided( mc->getX() , mc->getY() , mc->vY() );                           // check collided with monster
+
+    if(collided_mon == 2)died = 1;
+//    std::cout << died << '\n';
+    mc->update(collided_br | collided_mon,died);
 }
 
 void Level::Render(SDL_Renderer *renderer)

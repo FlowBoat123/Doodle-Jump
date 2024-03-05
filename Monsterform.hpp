@@ -11,8 +11,13 @@ public:
     void free();
     void animation();
     bool update(int vY);
-    void Set(int x,int y,int t = 0);
-    SDL_Rect* getSprite(int x){return &MonsterSprite[x];}
+    void SetType(int t,SDL_Renderer *renderer);
+    void SetPosition(int x,int y);
+    void SetKilled(){killed = 1;}
+    SDL_Rect* getSprite(int x){
+        if(x <= 1)return &MonsterSprite[x];
+        return &FlySprite[lastFrame];
+    }
     SDL_Rect* getFrame(){return &FlySprite[lastFrame];}
 
     int getX(){return posX;}

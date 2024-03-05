@@ -52,5 +52,3 @@
 30 300 nPlat
 30 300 nMonster
 30 520 fMonster
-
-
