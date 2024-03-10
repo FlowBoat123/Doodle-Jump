@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "Level.hpp"
 Level *level = nullptr;
-int border = 200;
+int border = 300;
 
 Game::Game()
 {
@@ -26,9 +26,9 @@ bool Game::init(const char *title, int xpos,int ypos,int width, int height, bool
 
         level = new Level();
         level->init(renderer);
-        level->LevelFromFile(level->getCurrentLV());
-        level->LoadLevel(renderer);
-//        level->test(renderer);
+//        level->LevelFromFile(level->getCurrentLV());
+//        level->LoadLevel(renderer);
+        level->test(renderer);
 
         isRunning = true;
     }else{
