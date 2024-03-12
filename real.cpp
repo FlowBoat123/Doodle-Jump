@@ -11,28 +11,17 @@ background::background()
 background::~background()
 {}
 
-bool background::LoadImage(SDL_Renderer *renderer,std::string path)
+bool background::LoadImage(SDL_Renderer *renderer)
 {
     free();
-    SDL_Texture *newTexture = NULL;
-    SDL_Surface *loadedSurface = IMG_Load( path.c_str() );
-    SDL_SetColorKey( loadedSurface,SDL_TRUE,SDL_MapRGB(loadedSurface->format,0,0xFF,0xFF) );
-    newTexture = SDL_CreateTextureFromSurface( renderer,loadedSurface );
-    mwidth = loadedSurface->w;
-    mheight = loadedSurface->h;
-    SDL_FreeSurface( loadedSurface );
-    mTexture = newTexture;
+    mTexture = IMG_LoadTexture(renderer,normal_bg.c_str());
+    mwidth = 400;mheight = 640;
     return mTexture != NULL;
 }
 
 void background::render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip)
 {
     SDL_Rect renderQuad = {x,y,mwidth,mheight};
-    if(clip != NULL)
-    {
-        renderQuad.w = clip->w;
-        renderQuad.h = clip->h;
-    }
     SDL_RenderCopy( renderer,mTexture,clip,&renderQuad );
 }
 
