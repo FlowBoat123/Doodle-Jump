@@ -26,7 +26,7 @@ bool Brick::update(int vY)
 {
     posY -= vY;
     tempY -= vY;
-    if(posY  > 600){
+    if(posY  > 700){
         free();
         return 1;
     }
@@ -45,7 +45,7 @@ void Brick::breakAnimation()
 {
     Uint32 current = SDL_GetTicks();
     float time_diff = current - LastUpdate;
-    if(lastFrame == 7)free();
+    if(lastFrame == 7)return;
     if(time_diff > 50.4 && lastFrame != 7){
         lastFrame += 1;
 //        std::cout << lastFrame << '\n';
@@ -58,6 +58,16 @@ void Brick::auto_update()
     if(posX > 300)velX = -2;
     if(posX < 30) velX = 2;
     posX += velX;
+}
+
+bool Brick::fall()
+{
+    posY += 8;
+    if(posY > 700){
+        free();
+        return true;
+    }
+    return false;
 }
 
 bool Brick::LoadImage(SDL_Renderer *renderer,std::string path)

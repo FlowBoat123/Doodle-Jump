@@ -36,7 +36,7 @@ public:
     void animation(){
         if(!Plat.empty()){
             for(int i = Plat_size-1;i >= 0;i--){
-                if(Plat[i] == brick_collided && !Plat[i]->isTouched()){
+                if(Plat[i]->isTouched()){
                     if(Plat[i]->getType() == 4){
                         Plat[i]->breakAnimation();
                     }
@@ -50,6 +50,7 @@ public:
     bool CheckCollided(int x,int y,int DoodleSprite,int vY){
         collided = 0;
         for(int i = 0;i < Plat_size;i++){
+            if(Plat[i]->isFalling())continue;
             if(DoodleSprite == 0 || DoodleSprite == 2)if(   (x + 50 > Plat[i]->getX())                   && // <--
                                                             (x + 20 < Plat[i]->getX() + Plat[i]->getW()) &&
                                                             (y + 70 > Plat[i]->getY())                   &&
@@ -62,18 +63,18 @@ public:
                                                             (vY > 0))collided = 1, brick_collided = Plat[i];
         }
         if(collided){
-//            std::cout << brick_collided->getType() << '\n';
             brick_collided -> preCollidedAnimation();
-            if(brick_collided->getType() == 4)collided = 0;
+            if(brick_collided->getType() == 4)collided = 0,brick_collided->setFall();
         }
-
-//        if(brick_collided->getType() == 4)collided = 0;
         return collided;
     }
 
     void auto_update(){
-        for(int i = 0;i < Plat_size;i++){
+        for(int i = Plat_size-1;i >= 0;i--){
             if(Plat[i]->getType() == 1)Plat[i]->auto_update();
+            if(Plat[i]->getType() == 4 && Plat[i]->isTouched()){
+                if(Plat[i]->fall())remove_(i);
+            }
         }
     }
 

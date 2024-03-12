@@ -10,11 +10,13 @@ public:
     void render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip = NULL, double angel = 0.0,SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );
     void free();
     bool update(int vY = 0);
+    bool fall();
     void auto_update();
     void setPosition(int x,int y,int whichtype = 0);
     void collidedAnimation();
-    void preCollidedAnimation(){tempY = posY,LastTouched = SDL_GetTicks();}
+    void preCollidedAnimation(){tempY = posY,LastTouched = SDL_GetTicks();touched = 1;}
     void breakAnimation();
+    void setFall(){falling = 1;}
 
     SDL_Rect* getSprite(int x){
         if(type == 4)
@@ -25,6 +27,7 @@ public:
 //    SDL_Rect* getFrame(){return &gSpriteBricks[lastFrame];}
 
     bool isTouched(){return touched;}
+    bool isFalling(){return falling;};
     int getX(){return posX;}
     int getY(){return posY;}
     int getW(){return width;}
@@ -39,7 +42,7 @@ private:
     int type;
     int lastFrame = 4;
 
-    bool touched = 0;
+    bool touched = 0,falling = 0;
     Uint32 LastTouched,LastUpdate;
 };
 
