@@ -7,8 +7,8 @@ FlyThings::FlyThings()
     Hut[2] = {0,60,55,50};
     Hut[3] = {65,60,55,50};
 
-    Springs[0] = {0,0,26,20};
-    Springs[1] = {0,20,26,38};
+    Springs[0] = {0,0,26,17};
+    Springs[1] = {0,23,26,34};
 
     Jetpack[0] = {8,0,21,41};
     Jetpack[1] = {40,0,17,49};
@@ -20,6 +20,10 @@ FlyThings::FlyThings()
     Jetpack[7] = {104,64,14,49};
     Jetpack[8] = {8,128,14,44};
     Jetpack[9] = {40,128,13,36};
+}
+
+FlyThings::~FlyThings()
+{
 }
 
 void FlyThings::LoadImage(SDL_Renderer *renderer)
@@ -38,28 +42,39 @@ bool FlyThings::update(SDL_Renderer *renderer,int vY)
     return 0;
 }
 
+bool FlyThings::endSelf()
+{
+    posY -= 10;const_Y -= 5;
+    if(posY < -50){
+        free();
+        return 1;
+    }
+    return 0;
+}
+
 void FlyThings::SetType(int x)
 {
     type = x;
     if(x == 0){
         link_type = "Hut.png";
         width = 43;height = 25;
+        propeller = Mix_LoadWAV("sounds/propeller.wav");
     }
     else if(x == 1){
         link_type = "springs.png";
-        width = 26;height = 10;
-//        std::cout << "liem\n";
+        width = 26;height = 17;
+        feder = Mix_LoadWAV("sounds/feder.mp3");
     }
     else{
         link_type = "jetpack.png";
         width = Jetpack[current_frame_jetpack].w;height = Jetpack[current_frame_jetpack].h;
+        jetpack = Mix_LoadWAV("sounds/jetpack.wav");
     }
 }
 
 void FlyThings::render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip, double angel,SDL_Point* center, SDL_RendererFlip flip)
 {
     SDL_Rect renderQuad = {x,y,width,height};
-//    std::cout << x << ' ' << y << '\n';
 
     if(type == 0)
     {
@@ -72,9 +87,15 @@ void FlyThings::render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip, doubl
 void FlyThings::animation_springs()
 {
     current = SDL_GetTicks();
+    if(!once_feder){
+        Mix_PlayChannel(-1,feder,0);
+        once_feder = 1;
+    }
     if(LastUpdate - current > 0.600){
         current_frame_springs = 1;
-        SetPosition(posX,const_Y - 12);
+        width = Jetpack[current_frame_springs].w;
+        height = Jetpack[current_frame_springs].h;
+        SetPosition(posX,const_Y - height + 17);
     }
 }
 
@@ -83,6 +104,7 @@ void FlyThings::animation_jetpack(int x,int y,int direction) // 0 for --> and 1 
     if(!direction)SetPosition(x + 49,y);
     else SetPosition(x - 10,y);
     current = SDL_GetTicks();
+    if(!once_jetpack)Mix_PlayChannel(-1,jetpack,4),once_jetpack = 1;
     float dT = (current - LastUpdate) / 1000.0f;
     int frametoUpdate = floor(dT / (1.0f / animatedFPS));
     if(frametoUpdate > 0){
@@ -139,6 +161,7 @@ void FlyThings::animation_hut(int x,int y)
 {
     SetPosition(x,y);
     current = SDL_GetTicks();
+    if(!once_propeller)Mix_PlayChannel(-1,propeller,4),once_propeller = 1;
     float dT = (current - LastUpdate) / 1000.0f;
     int frametoUpdate = floor(dT / (1.0f / animatedFPS));
     if(frametoUpdate > 0){
@@ -155,5 +178,17 @@ void FlyThings::free()
         mTexture = NULL;
         posX = 0;posY = 0;
         width = 0;height = 0;
+    }
+    if(type == 1){
+        Mix_FreeChunk(feder);
+        feder = NULL;
+    }
+    else if(type == 2){
+        Mix_FreeChunk(jetpack);
+        jetpack = NULL;
+    }
+    else{
+        Mix_FreeChunk(propeller);
+        propeller = NULL;
     }
 }

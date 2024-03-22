@@ -34,6 +34,16 @@ public:
         }
     }
 
+    void endSelf(){
+        if(!MonsterSprites.empty()){
+            for(int i = monsters_size-1;i >= 0;i--){
+                if(MonsterSprites[i]->endSelf()){
+                    remove_(i);
+                }
+            }
+        }
+    }
+
     void animation(){
         if(!MonsterSprites.empty()){
             for(int i = monsters_size-1;i >= 0;i--){

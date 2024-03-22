@@ -8,6 +8,12 @@ Monster::Monster()
     FlySprite[0] = {0,0,77,55}; // 1 fly animation
     FlySprite[1] = {78,0,77,55}; // 2
     FlySprite[2] = {79*2,0,77,55}; // 3
+    jumpOnMonster = Mix_LoadWAV("sounds/jumponmonster.mp3");
+}
+Monster::~Monster()
+{
+    Mix_FreeChunk(jumpOnMonster);
+    jumpOnMonster = NULL;
 }
 
 void Monster::SetType(int t,SDL_Renderer *renderer)
@@ -49,6 +55,7 @@ void Monster::free()
 void Monster::animation()
 {
     if(killed){
+        if(!jump_once)Mix_PlayChannel(-1,jumpOnMonster,0),jump_once = 1;
         posY += 8;
         return;
     }
@@ -76,9 +83,16 @@ void Monster::animation()
 bool Monster::update(int vY)
 {
     posY -= vY;const_Y -= vY;
-    if(posY > 600){
+    if(posY > 700){
         free();
         return 1;
     }
+    return 0;
+}
+
+bool Monster::endSelf()
+{
+    posY -= 10;const_Y -= 5;
+    if(posY < -100)return 1;
     return 0;
 }

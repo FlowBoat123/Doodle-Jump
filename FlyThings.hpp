@@ -15,15 +15,20 @@ private:
     SDL_Rect Jetpack[10];
     SDL_Rect Hut[4];
 
+    Mix_Chunk *feder = NULL;    bool once_feder = 0;
+    Mix_Chunk *jetpack = NULL;  bool once_jetpack = 0;
+    Mix_Chunk *propeller = NULL;bool once_propeller = 0;
+
     int current_frame_springs = 0,current_frame_jetpack = 9,current_frame_hut = 0;
     float animatedFPS = 24.0;
     Uint32 LastUpdate = 0.0,current; // time for animation
 public:
     FlyThings();
+    ~FlyThings();
     void LoadImage(SDL_Renderer *renderer);
-//    void render(SDL_Renderer *renderer,int x,int y,SDL_Rect *clip = NULL);
     void render(SDL_Renderer *renderer,int x,int y, SDL_Rect *clip = NULL, double angel = 0.0,SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );
     bool update(SDL_Renderer *renderer,int vY);
+    bool endSelf();
     void handlevent(SDL_Event e);
     void animation_springs();
     void animation_hut(int x,int y);
